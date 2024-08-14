@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button } from '@mui/material';
 import * as Yup from 'yup';
 
-// Khai báo schema xác thực cho các trường
+// Schema xác thực không cần khai báo trong component vì không phụ thuộc vào props hoặc state
 const validationSchema = Yup.object({
     phoneType: Yup.string().required('This field is required'),
     phoneNumber: Yup.string().required('This field is required'),
@@ -19,55 +19,43 @@ const validationSchema = Yup.object({
     dateOfBirth: Yup.date().required('This field is required'),
 });
 
+const initialFormData = {
+    phoneType: '',
+    phoneNumber: '',
+    email: '',
+    addressType: '',
+    addressLine1: '',
+    city: '',
+    state: '',
+    country: '',
+    patientType: '',
+    firstName: '',
+    lastName: '',
+    birthSex: '',
+    dateOfBirth: '',
+};
+
 const ContactForm = () => {
-    const [formData, setFormData] = useState({
-        phoneType: '',
-        phoneNumber: '',
-        email: '',
-        addressType: '',
-        addressLine1: '',
-        city: '',
-        state: '',
-        country: '',
-        patientType: '',
-        firstName: '',
-        lastName: '',
-        birthSex: '',
-        dateOfBirth: '',
-    });
-    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState(initialFormData);
+    const [errors, setErrors ] = useState({});
 
     const handleAddClick = async () => {
         try {
             await validationSchema.validate(formData, { abortEarly: false });
             console.log('Form submitted successfully!');
-            setErrors({}); // Clear errors on successful submission
+            setErrors({});
         } catch (err) {
-            const newErrors = {};
-            err.inner.forEach((error) => {
-                newErrors[error.path] = error.message;
-            });
-            setErrors(newErrors); // Set errors if there are validation failures
+            const newErrors = err.inner.reduce((acc, error) => ({
+                ...acc,
+                [error.path]: error.message,
+            }), {});
+            setErrors(newErrors);
             console.log('Errors:', newErrors);
         }
     };
 
     const handleCancelClick = () => {
-        setFormData({
-            phoneType: '',
-            phoneNumber: '',
-            email: '',
-            addressType: '',
-            addressLine1: '',
-            city: '',
-            state: '',
-            country: '',
-            patientType: '',
-            firstName: '',
-            lastName: '',
-            birthSex: '',
-            dateOfBirth: '',
-        });
+        setFormData(initialFormData);
         setErrors({});
     };
 
