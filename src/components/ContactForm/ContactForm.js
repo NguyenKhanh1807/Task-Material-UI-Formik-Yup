@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import * as Yup from 'yup';
 
 // Khai báo schema xác thực cho các trường
@@ -37,11 +37,6 @@ const ContactForm = () => {
     });
     const [errors, setErrors] = useState({});
 
-    const handleChange = (event) => {
-        const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
     const handleAddClick = async () => {
         try {
             await validationSchema.validate(formData, { abortEarly: false });
@@ -78,19 +73,6 @@ const ContactForm = () => {
 
     return (
         <Box>
-            {Object.keys(formData).map((field) => (
-                <TextField
-                    key={field}
-                    name={field}
-                    label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    error={!!errors[field]}
-                    helperText={errors[field] || ' '}
-                    margin="normal"
-                    fullWidth
-                />
-            ))}
             <Box display="flex" justifyContent="flex-end" sx={{ mt: 2, mr: 3, mb: 4 }}>
                 <Button variant="outlined" onClick={handleCancelClick} sx={{ marginRight: 1 }}>
                     Cancel
