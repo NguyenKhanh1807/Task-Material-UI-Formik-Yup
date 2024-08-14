@@ -27,9 +27,29 @@ export default function ContactInfo() {
         setIsCheckboxDisabled(false); // Cho phép checkbox trở thành bình thường
     };
 
+    const handleAddClick = () => {
+        formik.setTouched({
+            phoneNumber: true,
+            email: true,
+            addressType: true,
+            addressLine1: true,
+            city: true,
+            state: true,
+            country: true,
+            phoneType: true
+        });
+        formik.validateForm();
+    };
+
+    const handleCancel = () => {
+        formik.resetForm();
+    };
+
+
     const formik = useFormik({
         initialValues: {
             phoneNumber: '',
+            phoneType:'',
             email: '',
             addressType: '',
             addressLine1: '',
@@ -401,6 +421,24 @@ export default function ContactInfo() {
                                             Add Address
                                         </Typography>
                                     </Button>
+                                </Grid>
+
+                                <Grid item xs={2}>
+                                    <Box display="flex" justifyContent="flex-end">
+                                        <Grid item xs={12}>
+                                            <Button color="primary" variant="contained" onClick={handleAddClick}>
+                                                Add
+                                            </Button>
+
+                                            <Button
+                                                variant="outlined"
+                                                onClick={handleCancel}
+                                                sx={{ marginLeft: 1, color: 'primary.main', borderColor: 'primary.main' }}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </Grid>  
+                                    </Box>
                                 </Grid>
                             </Grid>
                         </form>

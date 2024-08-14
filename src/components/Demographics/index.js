@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField, FormControl, Select, MenuItem, Box, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Collapse, Paper } from '@mui/material';
+import { TextField, FormControl, Select, MenuItem, Box, Button, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Collapse, Paper } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon, CalendarToday as CalendarTodayIcon } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -7,6 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+
 
 const validate = values => {
    const errors = {};
@@ -48,11 +49,29 @@ export default function Demographics() {
             dateOfBirth: Yup.string().required('This field is required'),
         }),
 
+        onSubmit: (values) => {
+            console.log('Form data:', values);
+            alert('Form submitted successfully!');
+        },
+
         validate,
     });
 
     const handleToggle = () => {
         setExpanded(!expanded);
+    };
+
+    const handleAddClick = () => {
+        formik.setTouched({
+            patientType: true,
+            firstName: true,
+            lastName: true,
+            birthSex: true,
+            dateOfBirth: true,
+            philHealthId: true,
+            unknown: true,
+        });
+        formik.validateForm();
     };
 
     const handleCalendarToggle = () => {
@@ -62,6 +81,10 @@ export default function Demographics() {
     const handleDateChange = (date) => {
         formik.setFieldValue('dateOfBirth', date.format('MM/DD/YYYY'));
         setOpenCalendar(false);
+    };
+
+    const handleCancel = () => {
+        formik.resetForm();
     };
 
     return (
@@ -104,9 +127,11 @@ export default function Demographics() {
                                             <MenuItem value="" disabled>
                                                 Select
                                             </MenuItem>
+                                            <MenuItem value="">None</MenuItem>
                                             <MenuItem value={'type1'}>Type 1</MenuItem>
                                             <MenuItem value={'type2'}>Type 2</MenuItem>
                                         </Select>
+
                                         {formik.touched.patientType && formik.errors.patientType ? (
                                             <div style={{ color: 'red' }}>{formik.errors.patientType}</div>
                                         ) : null}
@@ -262,6 +287,24 @@ export default function Demographics() {
                                     onBlur={formik.handleBlur}
                                 />
                             </Grid>
+
+                            <Grid item xs={6} sx={{marginTop : 2 }}>
+                                <Box>
+                                    <Grid item xs={6}>
+                                        <Button color="primary" variant="contained" onClick={handleAddClick}>
+                                            Add
+                                        </Button>
+
+                                        <Button
+                                            variant="outlined"
+                                            onClick={handleCancel}
+                                            sx={{ marginLeft: 1, color: 'primary.main', borderColor: 'primary.main' }}
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </Grid>  
+                                </Box>
+                            </Grid>           
                         </form>
                     </AccordionDetails>
                 </Accordion>

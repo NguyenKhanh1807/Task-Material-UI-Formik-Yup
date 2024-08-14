@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, IconButton, FormControl, Select, MenuItem, Grid, TextField, Paper, InputAdornment } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, IconButton, FormControl, Select, MenuItem, Grid, TextField, Paper, InputAdornment } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 
 
@@ -7,13 +7,60 @@ export default function EmploymentDetails() {
     const [expanded, setExpanded] = React.useState(false); // Sử dụng state để theo dõi trạng thái mở rộng của Accordion. Ban đầu, Accordion sẽ không mở rộng.
     const [selectedCountry, setSelectedCountry] = React.useState('+1'); // State để lưu trữ mã quốc gia đã chọn, với giá trị mặc định là +1.
 
+    const [formData, setFormData] = useState({
+        employer: '',
+        employmentStatus: '',
+        occupation: '',
+        employeeId: '',
+        phoneNumber: '',
+        email: '',
+        addressType: '',
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        country: ''
+    });
+
     const handleToggle = () => {
         setExpanded(!expanded);
-    }; // Hàm này chuyển đổi trạng thái mở rộng của Accordion khi người dùng nhấp vào biểu tượng.
+    };
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     const handleCountryChange = (event) => {
         setSelectedCountry(event.target.value);
-    }; // Hàm này cập nhật mã quốc gia được chọn khi người dùng thay đổi lựa chọn trong danh sách chọn quốc gia.
+    };
+
+    const handleAddClick = () => {
+        console.log("Form data submitted:", formData);
+        // You might want to handle form submission logic here
+    };
+
+    const handleCancel = () => {
+        setFormData({
+            employer: '',
+            employmentStatus: '',
+            occupation: '',
+            employeeId: '',
+            phoneNumber: '',
+            email: '',
+            addressType: '',
+            addressLine1: '',
+            addressLine2: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            country: ''
+        });
+    };
 
     return (
         <Paper elevation={3} sx={{ padding: 2, margin: 2 }}>
@@ -43,36 +90,43 @@ export default function EmploymentDetails() {
                                 </Typography>
                                 <TextField
                                     fullWidth
+                                    name="employer"
                                     placeholder="Employer"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.employer}
+                                    onChange={handleChange}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={6} placeholder="Select">
+                            <Grid item xs={12} sm={6} md={6}>
                                 <Typography component="span">
                                     Employment Status
                                 </Typography>
                                 <FormControl fullWidth>
                                     <Select
+                                        name="employmentStatus"
+                                        value={formData.employmentStatus}
+                                        onChange={handleChange}
                                         displayEmpty
                                     >
-                                        <MenuItem value="" disabled >
-                                            Select
-                                        </MenuItem>
-                                        <MenuItem value={'full-time'}>Full-time</MenuItem>
-                                        <MenuItem value={'part-time'}>Part-time</MenuItem>
+                                        <MenuItem value="" disabled>Select</MenuItem>
+                                        <MenuItem value="none">None</MenuItem>
+                                        <MenuItem value="full-time">Full-time</MenuItem>
+                                        <MenuItem value="part-time">Part-time</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
+
                             <Grid item xs={12} sm={6} md={3}>
                                 <Typography component="span">
                                     Occupation
                                 </Typography>
                                 <TextField
                                     fullWidth
+                                    name="occupation"
                                     placeholder="Occupation"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.occupation}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
@@ -81,19 +135,23 @@ export default function EmploymentDetails() {
                                 </Typography>
                                 <TextField
                                     fullWidth
+                                    name="employeeId"
                                     placeholder="Employee ID"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.employeeId}
+                                    onChange={handleChange}
                                 />
                             </Grid>
+
                             <Grid item xs={12} sm={6} md={3}>
-                                <Typography component="span">
-                                    Phone Number
-                                </Typography>
+                                <Typography component="span">Phone Number</Typography>
                                 <TextField
                                     fullWidth
+                                    name="phoneNumber"
                                     placeholder="+1"
                                     variant="outlined"
+                                    value={formData.phoneNumber}
+                                    onChange={handleChange}
                                     InputProps={{
                                         startAdornment: (
                                             <InputAdornment position="start">
@@ -118,103 +176,109 @@ export default function EmploymentDetails() {
                                             </InputAdornment>
                                         ),
                                     }}
-                                    InputLabelProps={{ shrink: false }}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
-                                <Typography component="span">
-                                    Email
-                                </Typography>
+                                <Typography component="span">Email</Typography>
                                 <TextField
                                     fullWidth
+                                    name="email"
                                     placeholder="Email"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.email}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
-                                <Typography component="span">
-                                    Address Type
-                                </Typography>
+                                <Typography component="span">Address Type</Typography>
                                 <FormControl fullWidth>
                                     <Select
+                                        name="addressType"
+                                        value={formData.addressType}
+                                        onChange={handleChange}
                                         displayEmpty
                                     >
-                                        <MenuItem value="" disabled>
-                                            Select
-                                        </MenuItem>
-                                        <MenuItem value={'home'}>Home</MenuItem>
-                                        <MenuItem value={'work'}>Work</MenuItem>
+                                        <MenuItem value="" disabled>Select</MenuItem>
+                                        <MenuItem value="none">None</MenuItem>
+                                        <MenuItem value="home">Home</MenuItem>
+                                        <MenuItem value="work">Work</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
-                                <Typography component="span">
-                                    Address Line 1
-                                </Typography>
+                                <Typography component="span">Address Line 1</Typography>
                                 <TextField
                                     fullWidth
+                                    name="addressLine1"
                                     placeholder="Address Line 1"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.addressLine1}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
-                                <Typography component="span">
-                                    Address Line 2
-                                </Typography>
+                                <Typography component="span">Address Line 2</Typography>
                                 <TextField
                                     fullWidth
+                                    name="addressLine2"
                                     placeholder="Address Line 2"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.addressLine2}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
-                                <Typography component="span">
-                                    City
-                                </Typography>
+                                <Typography component="span">City</Typography>
                                 <TextField
                                     fullWidth
+                                    name="city"
                                     placeholder="City"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.city}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
-                                <Typography component="span">
-                                    State
-                                </Typography>
+                                <Typography component="span">State</Typography>
                                 <TextField
                                     fullWidth
+                                    name="state"
                                     placeholder="State"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.state}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
-                                <Typography component="span">
-                                    Zip code
-                                </Typography>
+                                <Typography component="span">Zip code</Typography>
                                 <TextField
                                     fullWidth
+                                    name="zipCode"
                                     placeholder="Zip code"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.zipCode}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={6}>
-                                <Typography component="span">
-                                    Country
-                                </Typography>
+                                <Typography component="span">Country</Typography>
                                 <TextField
                                     fullWidth
+                                    name="country"
                                     placeholder="United States"
                                     variant="outlined"
-                                    InputLabelProps={{ shrink: false }}
+                                    value={formData.country}
+                                    onChange={handleChange}
                                 />
                             </Grid>
-                        </Grid>
+
+
+                            {/* Add and Cancel buttons */}
+                            <Box display="flex" justifyContent="flex-end" mt={2} sx = {{ ml : 2 }}>
+                                <Button onClick={handleAddClick} variant="contained" sx={{ marginRight: 1 }}>Add</Button>
+                                <Button onClick={handleCancel} variant="outlined">Cancel</Button>
+                            </Box>
+                            </Grid>
                     </AccordionDetails>
                 </Accordion>
             </Box>

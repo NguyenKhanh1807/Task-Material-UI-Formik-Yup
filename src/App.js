@@ -6,8 +6,8 @@ import RelatedPerson from './components/RelatedPerson';
 import Title from './components/Title';
 import Guarantor from './components/Guarantor';
 import Coverage from './components/Coverage';
+import ContactForm from './components/ContactForm/ContactForm'; // Ensure the path is correct
 import * as React from 'react';
-import ContactForm from './components/ContactForm'; // Đảm bảo đúng đường dẫn
 
 function App() {
   return (
@@ -26,7 +26,8 @@ function App() {
       </div>
 
       <div>
-        <ContactForm /> {/* Đảm bảo sử dụng đúng tên component */}
+        {/* This is where ContactForm is used, including its internal FormActions */}
+        <ContactForm /> 
       </div>
     </>
   );
