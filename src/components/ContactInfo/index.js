@@ -2,18 +2,11 @@ import * as React from 'react';
 import { Box, Button, Typography, Accordion, AccordionSummary, AccordionDetails, IconButton, TextField, Select, MenuItem, Grid, InputAdornment, FormControl, Checkbox, FormControlLabel, Radio, RadioGroup, Paper } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
 
-export default function ContactInfo() {
-    const [expanded, setExpanded] = React.useState(false); 
+export default function ContactInfo({ expanded, handleToggle, formik }) {
     const [selectedValue, setSelectedValue] = React.useState('permanent'); 
     const [countryCode, setCountryCode] = React.useState('+63'); 
     const [isCheckboxDisabled, setIsCheckboxDisabled] = React.useState(true); // Biến trạng thái để điều khiển checkbox
-
-    const handleToggle = () => {
-        setExpanded(!expanded);
-    };
 
     const handleChangeCategory = (event) => {
         setSelectedValue(event.target.value);
@@ -27,7 +20,7 @@ export default function ContactInfo() {
         setIsCheckboxDisabled(false); // Cho phép checkbox trở thành bình thường
     };
 
-    const handleAddClick = () => {
+    const handleAddClick1 = () => {
         formik.setTouched({
             phoneNumber: true,
             email: true,
@@ -41,44 +34,18 @@ export default function ContactInfo() {
         formik.validateForm();
     };
 
-    const handleCancel = () => {
+    const handleCancel1 = () => {
         formik.resetForm();
     };
-
-
-    const formik = useFormik({
-        initialValues: {
-            phoneNumber: '',
-            phoneType:'',
-            email: '',
-            addressType: '',
-            addressLine1: '',
-            city: '',
-            state: '',
-            country: '',
-            useDefaultAddress: true,  // Đặt giá trị mặc định là true để checkbox được check on by default
-        },
-
-        validationSchema: Yup.object({
-            phoneNumber: Yup.string().required('This field is required'),
-            email: Yup.string().required('This field is required'),
-            addressType: Yup.string().required('This field is required'),
-            addressLine1: Yup.string().required('This field is required'),
-            city: Yup.string().required('This field is required'),
-            state: Yup.string().required('This field is required'),
-            country: Yup.string().required('This field is required'),
-            phoneType: Yup.string().required('This field is required'),
-        }),
-    });
 
     return (
         <Paper elevation={3} sx={{ padding: 2, margin: 2 }}>
             <Box sx={{ flexGrow: 1 }}>
-                <Accordion expanded={expanded} onChange={handleToggle}>
+                <Accordion expanded={expanded} onChange={() => handleToggle('contactInfo')}>
                     <AccordionSummary>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <IconButton
-                                onClick={handleToggle}
+                                onClick={() => handleToggle('contactInfo')}
                                 sx={{
                                     transition: 'transform 0.3s',
                                     transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -426,13 +393,13 @@ export default function ContactInfo() {
                                 <Grid item xs={2}>
                                     <Box display="flex" justifyContent="flex-end">
                                         <Grid item xs={12}>
-                                            <Button color="primary" variant="contained" onClick={handleAddClick}>
+                                            <Button color="primary" variant="contained" onClick={handleAddClick1}>
                                                 Add
                                             </Button>
 
                                             <Button
                                                 variant="outlined"
-                                                onClick={handleCancel}
+                                                onClick={handleCancel1}
                                                 sx={{ marginLeft: 1, color: 'primary.main', borderColor: 'primary.main' }}
                                             >
                                                 Cancel

@@ -1,78 +1,13 @@
-import * as React from 'react';
-import { TextField, FormControl, Select, MenuItem, Box, Button, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Collapse, Paper } from '@mui/material';
+import React from 'react';
+import { TextField, FormControl, Select, MenuItem, Box, Grid, Typography, IconButton, Accordion, AccordionSummary, AccordionDetails, Collapse, Paper } from '@mui/material';
 import { ExpandMore as ExpandMoreIcon, CalendarToday as CalendarTodayIcon } from '@mui/icons-material';
 import Checkbox from '@mui/material/Checkbox';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 
-
-const validate = values => {
-   const errors = {};
-   if (!values.firstName) {
-     errors.firstName = 'This field is required';
-   } else if (values.firstName.length > 15) {
-     errors.firstName = 'Must be 15 characters or less';
-   }
- 
-   if (!values.lastName) {
-     errors.lastName = 'This field is required';
-   } else if (values.lastName.length > 20) {
-     errors.lastName = 'Must be 20 characters or less';
-   }
- 
-   return errors;
- };
-
-export default function Demographics() {
-    const [expanded, setExpanded] = React.useState(false);
+export default function Demographics({ expanded, handleToggle, formik }) {
     const [openCalendar, setOpenCalendar] = React.useState(false);
-
-    const formik = useFormik({
-        initialValues: {
-            patientType: '',
-            firstName: '',
-            lastName: '',
-            birthSex: '',
-            dateOfBirth: '',
-            philHealthId: '',
-            unknown: false,
-        },
-
-        validationSchema: Yup.object({
-            patientType: Yup.string().required('This field is required'),
-            firstName: Yup.string().required('This field is required'),
-            lastName: Yup.string().required('This field is required'),
-            birthSex: Yup.string().required('This field is required'),
-            dateOfBirth: Yup.string().required('This field is required'),
-        }),
-
-        onSubmit: (values) => {
-            console.log('Form data:', values);
-            alert('Form submitted successfully!');
-        },
-
-        validate,
-    });
-
-    const handleToggle = () => {
-        setExpanded(!expanded);
-    };
-
-    const handleAddClick = () => {
-        formik.setTouched({
-            patientType: true,
-            firstName: true,
-            lastName: true,
-            birthSex: true,
-            dateOfBirth: true,
-            philHealthId: true,
-            unknown: true,
-        });
-        formik.validateForm();
-    };
 
     const handleCalendarToggle = () => {
         setOpenCalendar(!openCalendar);
@@ -81,10 +16,6 @@ export default function Demographics() {
     const handleDateChange = (date) => {
         formik.setFieldValue('dateOfBirth', date.format('MM/DD/YYYY'));
         setOpenCalendar(false);
-    };
-
-    const handleCancel = () => {
-        formik.resetForm();
     };
 
     return (
@@ -131,7 +62,6 @@ export default function Demographics() {
                                             <MenuItem value={'type1'}>Type 1</MenuItem>
                                             <MenuItem value={'type2'}>Type 2</MenuItem>
                                         </Select>
-
                                         {formik.touched.patientType && formik.errors.patientType ? (
                                             <div style={{ color: 'red' }}>{formik.errors.patientType}</div>
                                         ) : null}
@@ -223,11 +153,11 @@ export default function Demographics() {
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                         error={formik.touched.dateOfBirth && Boolean(formik.errors.dateOfBirth)}
-                                        disabled={formik.values.unknown}  /* Vô hiệu hóa khi checkbox Unknown được chọn */
+                                        disabled={formik.values.unknown}
                                         sx={{
-                                            backgroundColor: formik.values.unknown ? '#e0e0e0' : 'transparent',  // Màu xám khi disabled
+                                            backgroundColor: formik.values.unknown ? '#e0e0e0' : 'transparent',
                                             '& .MuiInputBase-input.Mui-disabled': {
-                                                WebkitTextFillColor: formik.values.unknown ? '#9e9e9e' : 'inherit',  // Màu chữ khi disabled
+                                                WebkitTextFillColor: formik.values.unknown ? '#9e9e9e' : 'inherit',
                                             }
                                         }}
                                         InputLabelProps={{ shrink: false }}
@@ -243,7 +173,7 @@ export default function Demographics() {
                                         <div style={{ color: 'red' }}>{formik.errors.dateOfBirth}</div>
                                     ) : null}
 
-                                    <Collapse in={openCalendar && !formik.values.unknown}>  {/* Chỉ mở lịch khi checkbox không được chọn */}
+                                    <Collapse in={openCalendar && !formik.values.unknown}>
                                         <Box sx={{ p: 2 }}>
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DateCalendar onChange={handleDateChange} />
@@ -260,16 +190,14 @@ export default function Demographics() {
                                         onChange={e => {
                                             formik.handleChange(e);
                                             if (e.target.checked) {
-                                                formik.setFieldValue('dateOfBirth', '');  /* Xóa giá trị ngày sinh nếu chọn Unknown */
-                                                setOpenCalendar(false);  /* Đóng lịch nếu đang mở */
+                                                formik.setFieldValue('dateOfBirth', '');
+                                                setOpenCalendar(false);
                                             }
                                         }}
                                         inputProps={{ 'aria-label': 'controlled' }}
                                     />
                                     <Typography variant="body2">Unknown</Typography>
                                 </Grid>
-
-
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={12} sx={{ mt: 2 }}>
@@ -287,24 +215,6 @@ export default function Demographics() {
                                     onBlur={formik.handleBlur}
                                 />
                             </Grid>
-
-                            <Grid item xs={6} sx={{marginTop : 2 }}>
-                                <Box>
-                                    <Grid item xs={6}>
-                                        <Button color="primary" variant="contained" onClick={handleAddClick}>
-                                            Add
-                                        </Button>
-
-                                        <Button
-                                            variant="outlined"
-                                            onClick={handleCancel}
-                                            sx={{ marginLeft: 1, color: 'primary.main', borderColor: 'primary.main' }}
-                                        >
-                                            Cancel
-                                        </Button>
-                                    </Grid>  
-                                </Box>
-                            </Grid>           
                         </form>
                     </AccordionDetails>
                 </Accordion>

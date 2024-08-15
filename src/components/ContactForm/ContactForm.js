@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Demographics from '../Demographics';
+import ContactInfo from '../ContactInfo';
+import Employment from '../Employment';
+import Guarantor from '../Guarantor';
+import RelatedPerson from '../RelatedPerson';
+import Coverage from '../Coverage';
+
 
 // Schema xác thực không cần khai báo trong component vì không phụ thuộc vào props hoặc state
 const validationSchema = Yup.object({
@@ -36,39 +44,71 @@ const initialFormData = {
 };
 
 const ContactForm = () => {
-    const [formData, setFormData] = useState(initialFormData);
-    const [errors, setErrors ] = useState({});
+    const [expanded, setExpanded] = useState({
+        demographics: false,
+        contactInfo: false,
+        employment: false,
+        guarantor: false,
+        relatedPerson: false,
+        coverage: false
+    });
 
-    const handleAddClick = async () => {
-        try {
-            await validationSchema.validate(formData, { abortEarly: false });
-            console.log('Form submitted successfully!');
-            setErrors({});
-        } catch (err) {
-            const newErrors = err.inner.reduce((acc, error) => ({
-                ...acc,
-                [error.path]: error.message,
-            }), {});
-            setErrors(newErrors);
-            console.log('Errors:', newErrors);
+    const handleToggle = (section) => {
+        setExpanded(prev => ({ ...prev, [section]: !prev[section] }));
+    };
+
+    const formik = useFormik({
+        initialValues: initialFormData,
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            console.log('Form data:', values);
+            alert('Form submitted successfully!');
+        },
+    });
+
+    const handleAddClick = () => {
+        formik.handleSubmit();
+
+        if (!formik.isValid) {
+            console.log('Form validation errors:', formik.errors);
         }
     };
 
     const handleCancelClick = () => {
-        setFormData(initialFormData);
-        setErrors({});
+        formik.resetForm();
     };
 
     return (
         <Box>
-            <Box display="flex" justifyContent="flex-end" sx={{ mt: 2, mr: 3, mb: 4 }}>
-                <Button variant="outlined" onClick={handleCancelClick} sx={{ marginRight: 1 }}>
-                    Cancel
-                </Button>
-                <Button variant="contained" color="primary" onClick={handleAddClick}>
-                    Add
-                </Button>
-            </Box>
+            <Demographics expanded={expanded.demographics} handleToggle={handleToggle} formik={formik} />
+            <ContactInfo expanded={expanded.contactInfo} handleToggle={handleToggle} formik={formik} />
+            <Employment expanded={expanded.employment} handleToggle={handleToggle} formik={formik} />
+            <Guarantor expanded={expanded.guarantor} handleToggle={handleToggle} />
+            <RelatedPerson expanded={expanded.relatedPerson} handleToggle={handleToggle} />
+            <Coverage expanded={expanded.coverage} handleToggle={handleToggle} />
+
+            {/* Nút Add và Cancel */}
+            <Box sx={{ flexGrow: 1 }} />
+            <Grid container>
+                <Grid item xs={12}>
+                    <Box display="flex" justifyContent="flex-end" sx={{ p: 2 }}>
+                        <Button
+                            variant="outlined"
+                            sx={{ marginRight: 1, color: 'primary.main', borderColor: 'primary.main' }}
+                            onClick={handleCancelClick}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleAddClick}
+                        >
+                            Add
+                        </Button>
+                    </Box>
+                </Grid>
+            </Grid>
         </Box>
     );
 };

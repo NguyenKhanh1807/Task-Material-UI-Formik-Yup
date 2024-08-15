@@ -1,9 +1,9 @@
 import './App.css';
+import Demographics from './components/Demographics';
+import Title from './components/Title';
 import ContactInfo from './components/ContactInfo';
 import Employment from './components/Employment';
-import Demographics from './components/Demographics';
 import RelatedPerson from './components/RelatedPerson';
-import Title from './components/Title';
 import Guarantor from './components/Guarantor';
 import Coverage from './components/Coverage';
 import ContactForm from './components/ContactForm/ContactForm'; // Ensure the path is correct
