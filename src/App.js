@@ -1,12 +1,12 @@
 import './App.css';
 import ContactInfoSection from './components/ContactInfoSection';
-import CoverageSection from './components/CoverageSection';
+// import CoverageSection from './components/CoverageSection';
 import DemographicsSection from './components/DemographicsSection';
 // import ContactInfo from './components/ContactInfo';
 // import Demographics from './components/Demographics';
 import EmploymentSection from './components/EmploymentSection';
-import GuarantorSection from './components/GuarantorSection';
-import RelatedPersonSection from './components/RelatedPersonSection';
+// import GuarantorSection from './components/GuarantorSection';
+// import RelatedPersonSection from './components/RelatedPersonSection';
 import Title from './components/Title';
 // import Employment from './components/Employment';
 // import RelatedPerson from './components/RelatedPerson';
@@ -26,9 +26,9 @@ function App() {
         <DemographicsSection/>
         <ContactInfoSection />
         <EmploymentSection />
-        <GuarantorSection />
+        {/* <GuarantorSection />
         <RelatedPersonSection />
-        <CoverageSection />
+        <CoverageSection /> */}
       </div>
 
       <div>

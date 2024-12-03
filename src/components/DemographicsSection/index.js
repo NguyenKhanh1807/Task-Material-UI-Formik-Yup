@@ -1032,7 +1032,7 @@ export default function DemographicsSection({ expanded, handleToggle, formik }) 
     if (!formik) {
         console.error("formik is undefined in DemographicsSection");
         return null;  // Return early if formik is not provided
-    }
+    };
 
     return (
         <Paper elevation={3} sx={{ padding: 2, margin: 2 }}>
